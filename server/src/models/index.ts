@@ -10,6 +10,7 @@ import Order, { relationOrder } from "./order";
 import OrderSheet, { relationOrderSheet } from "./order_sheet";
 import User, { relationUser } from "./user";
 import Point, { relationPoint } from "./point";
+import Admin from "./admin";
 
 relationProduct();
 relationUser();
@@ -31,5 +32,6 @@ export {
   ProductQuestion,
   ProductQuestionRead,
   ProductReview,
-  Point
+  Point,
+  Admin
 };

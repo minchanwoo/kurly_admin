@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import session from "express-session";
+import routes from "./routes";
 
 import { sequelize } from "./models";
 
@@ -29,6 +30,8 @@ app.use(
     exposedHeaders: ["Content-Range"]
   })
 );
+
+app.use("/", routes);
 
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번에서 대기중~!!");
