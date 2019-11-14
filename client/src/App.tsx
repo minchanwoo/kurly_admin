@@ -12,7 +12,7 @@ const App = () => {
       <div style={{ height: "100%" }}>
         {nick ? (
           <>
-            <Route path="/" exact component={Home} />
+            <Route path="/" component={Home} />
           </>
         ) : (
           <Route path="/" component={Login} />
