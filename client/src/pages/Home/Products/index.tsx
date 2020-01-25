@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Axios from "axios";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -8,6 +7,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { TablePagination } from "@material-ui/core";
+import ProductDialog from "./ProductDialog";
+import { graphql } from "../../../util/graphql";
 
 const useStyles = makeStyles({
   root: {
@@ -19,23 +20,38 @@ const useStyles = makeStyles({
   }
 });
 
+const PRODUCTS = `query($offset:Int!, $limit:Int!) {
+  products(offset:$offset, limit:$limit) {
+    count
+    list {
+      id
+      name
+      price
+      image_url
+    }
+  }
+}`;
+
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [count, setCount] = useState(0);
+  const [dialogProductId, setDialogProductId] = useState(0);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const classes = useStyles();
   useEffect(() => {
-    Axios.get(
-      `http://localhost:5000/products?offset=${page *
-        rowsPerPage}&limit=${rowsPerPage}`,
-      { withCredentials: true }
-    ).then(result => {
-      setCount(result.data.count);
-      setProducts(result.data.result);
+    graphql({
+      query: PRODUCTS,
+      variables: {
+        offset: rowsPerPage * page,
+        limit: rowsPerPage
+      }
+    }).then(result => {
+      setCount(result.products.count);
+      setProducts(result.products.list);
     });
-  }, [page]);
+  }, [page, rowsPerPage]);
   return (
     <div>
       <h3>상품관리</h3>
@@ -43,19 +59,21 @@ const Products = () => {
         <TableHead>
           <TableRow>
             <TableCell>번호</TableCell>
-            <TableCell>닉네임</TableCell>
-            <TableCell>이름</TableCell>
-            <TableCell>이메일</TableCell>
+            <TableCell>상품명</TableCell>
+            <TableCell>가격</TableCell>
+            <TableCell>상품이미지</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {products.map((product: any, i) => {
             return (
-              <TableRow key={i}>
+              <TableRow key={i} onClick={() => setDialogProductId(product.id)}>
                 <TableCell>{product.id}</TableCell>
                 <TableCell>{product.name}</TableCell>
-                <TableCell>{product.price}</TableCell>
-                <TableCell>{product.image_url}</TableCell>
+                <TableCell>{product.price.toLocaleString()}원</TableCell>
+                <TableCell>
+                  <img src={product.image_url} alt="상품이미지" width={50} />
+                </TableCell>
               </TableRow>
             );
           })}
@@ -72,6 +90,10 @@ const Products = () => {
           setRowsPerPage(Number(e.target.value));
           setPage(0);
         }}
+      />
+      <ProductDialog
+        dialogProductId={dialogProductId}
+        setDialogProductId={setDialogProductId}
       />
     </div>
   );

@@ -1,16 +1,18 @@
 {
-	"development": {
-		"username": "root",
-		"password": "cksnworud2",
-		"database": "kurly",
-		"host": "127.0.0.1",
-		"dialect": "mysql"
-	},
-	"production": {
-		"username": "user",
-		"password": "1q2w3e4R",
-		"database": "kuylr",
-		"host": "127.0.0.1",
-		"dialect": "mysql"
-	}
+  "development": {
+    "username": "root",
+    "password": "cksnworud2",
+    "database": "kurly_test2",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "logging": false
+  },
+  "production": {
+    "username": "user",
+    "password": "1q2w3e4R",
+    "database": "kuylr",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
 }

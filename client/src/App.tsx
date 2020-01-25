@@ -10,13 +10,14 @@ const App = () => {
   return (
     <Router>
       <div style={{ height: "100%" }}>
-        {nick ? (
+        {/* {nick ? (
           <>
             <Route path="/" component={Home} />
           </>
         ) : (
           <Route path="/" component={Login} />
-        )}
+        )} */}
+        <Route path="/" component={Home} />
       </div>
     </Router>
   );

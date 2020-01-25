@@ -3,8 +3,13 @@ import cors from "cors";
 import express from "express";
 import session from "express-session";
 import routes from "./routes";
+import jwt from "jsonwebtoken";
+import { ApolloServer } from "apollo-server-express";
 
 import { sequelize } from "./models";
+
+import { resolvers } from "./graphql/resolvers";
+import { schema } from "./graphql/schema";
 
 const app = express();
 sequelize.sync();
@@ -32,6 +37,23 @@ app.use(
   })
 );
 
+const server = new ApolloServer({
+  typeDefs: schema,
+  resolvers,
+  playground: true,
+  context: ({ req }) => {
+    const tokenWithBearer = req.headers.authorization || "";
+    const token = tokenWithBearer.split(" ")[1];
+
+    if (!token) {
+      return null;
+    }
+    const admin = jwt.verify(token, "SECRET");
+    return { admin };
+  }
+});
+
+server.applyMiddleware({ app, path: "/" });
 app.use("/", routes);
 
 app.listen(app.get("port"), () => {

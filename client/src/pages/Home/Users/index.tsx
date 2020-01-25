@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Axios from "axios";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -8,6 +7,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { TablePagination } from "@material-ui/core";
+import { graphql } from "../../../util/graphql";
 
 const useStyles = makeStyles({
   root: {
@@ -19,6 +19,18 @@ const useStyles = makeStyles({
   }
 });
 
+const USERS = `query($offset:Int, $limit:Int) {
+  users(offset:$offset, limit:$limit) {
+    count
+    list {
+      id
+      nick
+      name
+      email
+    }
+  }
+}`;
+
 const Users = () => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
@@ -28,15 +40,17 @@ const Users = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    Axios.get(
-      `http://localhost:5000/users?offset=${page *
-        rowsPerPage}&limit=${rowsPerPage}`,
-      { withCredentials: true }
-    ).then(result => {
-      setCount(result.data.count);
-      setUsers(result.data.users);
+    graphql({
+      query: USERS,
+      variables: {
+        offset: rowsPerPage * page,
+        limit: rowsPerPage
+      }
+    }).then(result => {
+      setUsers(result.users.list);
+      setCount(result.users.count);
     });
-  }, [page]);
+  }, [page, rowsPerPage]);
 
   return (
     <div>

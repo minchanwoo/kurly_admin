@@ -38,8 +38,8 @@ const MENUES = [
   { path: "/products", name: "상품관리", component: Products },
   { path: "/orders", name: "주문관리", component: Orders },
   { path: "/users", name: "사용자관리", component: Users },
-  { path: "/reviews", name: "후기관리", component: Reviews },
-  { path: "/questions", name: "문의관리", component: Questions }
+  { path: "/questions", name: "문의관리", component: Questions },
+  { path: "/reviews", name: "후기관리", component: Reviews }
 ];
 
 const Home = () => {

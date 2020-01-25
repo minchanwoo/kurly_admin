@@ -1,7 +1,5 @@
 import { Router } from "express";
 import adminRouter from "./admin";
-import userRouter from "./users";
-import productRouter from "./products";
 
 const router = Router();
 
@@ -14,8 +12,5 @@ router.use((req, res, next) => {
     res.status(500).send("not logged in");
   }
 });
-
-router.use("/users", userRouter);
-router.use("/products", productRouter);
 
 export default router;
